@@ -1,21 +1,21 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "schmeits/filament-character-counter",
+    "description": "This is my package filament-character-counter",
     "keywords": [
-        ":vendor_name",
+        "schmeits",
         "laravel",
-        ":package_slug"
+        "filament-character-counter"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/schmeits/filament-character-counter",
     "support": {
-        "issues": "https://github.com/:vendor_slug/:package_slug/issues",
-        "source": "https://github.com/:vendor_slug/:package_slug"
+        "issues": "https://github.com/schmeits/filament-character-counter/issues",
+        "source": "https://github.com/schmeits/filament-character-counter"
     },
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Tally Schmeits",
+            "email": "tally@schmeits.com",
             "role": "Developer"
         }
     ],
@@ -23,7 +23,6 @@
         "php": "^8.1",
         "filament/filament": "^3.0",
         "filament/forms": "^3.0",
-        "filament/tables": "^3.0",
         "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
@@ -40,14 +39,17 @@
         "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
+        "files": [
+            "tests/helpers.php"
+        ],
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Schmeits\\FilamentCharacterCounter\\": "src/",
+            "Schmeits\\FilamentCharacterCounter\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/"
+            "Schmeits\\FilamentCharacterCounter\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -67,10 +69,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Schmeits\\FilamentCharacterCounter\\FilamentCharacterCounterServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "FilamentCharacterCounter": "Schmeits\\FilamentCharacterCounter\\Facades\\FilamentCharacterCounter"
             }
         }
     },
