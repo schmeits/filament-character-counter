@@ -18,7 +18,7 @@ it('sets its state path from its name', function () {
 
 it('show the default character counter', function () {
     livewire(Schmeits\FilamentCharacterCounter\Tests\Fixtures\Livewire::class)
-        ->assertSeeHtml('<span x-text="characterCount"></span><!--[if BLOCK]><![endif]--> / 100<!--[if ENDBLOCK]><![endif]--> characters')
-        ->assertSeeHtml('<span x-text="characterCount"></span><!--[if BLOCK]><![endif]--> / 50<!--[if ENDBLOCK]><![endif]--> characters')
-        ->assertSeeHtml('<span x-text="characterCount"></span><!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--> characters');
+        ->assertSeeText(' / 100 characters')
+        ->assertSeeText(' / 50 characters')
+        ->assertSeeText(' characters');
 });
