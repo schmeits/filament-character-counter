@@ -45,6 +45,12 @@ Textarea::make('description')
     ->characterLimit(155),
 ```
 
+maxLength can also be used to limit the maximum number of characters, there is no need to specify the characterLimit as well.
+```php
+TextInput::make('title')
+    ->maxLength(50),
+```
+
 ## Testing
 
 ```bash
