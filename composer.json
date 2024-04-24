@@ -1,9 +1,11 @@
 {
     "name": "schmeits/filament-character-counter",
-    "description": "This is my package filament-character-counter",
+    "description": "This is a Filament character counter TextField and Textarea form field for Filament v3.2",
     "keywords": [
         "schmeits",
         "laravel",
+        "filament",
+        "filament-plugin",
         "filament-character-counter"
     ],
     "homepage": "https://github.com/schmeits/filament-character-counter",
