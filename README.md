@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schmeits/filament-character-counter/fix-php-code-styling.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schmeits/filament-character-counter/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schmeits/filament-character-counter.svg?style=flat-square)](https://packagist.org/packages/schmeits/filament-character-counter)
 
-This is a filament character counter TextField and Textarea form field.
+This is a [Filament](https://filamentphp.com/) character counter TextField and Textarea form field for Filament v3.2 
 
 ![example-screenshot.png](docs-assets/screenshots/example-screenshot.png)
 
@@ -66,6 +66,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Tally Schmeits](https://github.com/schmeits)
+- Inspired on [the package](https://github.com/sweebee/filament-char-counter) by Wiebe Nieuwenhuis
 - [All Contributors](../../contributors)
 
 ## License
