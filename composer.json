@@ -41,15 +41,15 @@
         "spatie/laravel-ray": "^1.36"
     },
     "autoload": {
-        "files": [
-            "tests/helpers.php"
-        ],
         "psr-4": {
             "Schmeits\\FilamentCharacterCounter\\": "src/",
             "Schmeits\\FilamentCharacterCounter\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
+        "files": [
+            "tests/helpers.php"
+        ],
         "psr-4": {
             "Schmeits\\FilamentCharacterCounter\\Tests\\": "tests/"
         }
