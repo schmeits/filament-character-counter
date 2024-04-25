@@ -57,7 +57,7 @@ class FilamentCharacterCounterServiceProvider extends PackageServiceProvider
         );
     }
 
-    protected function getAssetPackageName(): ?string
+    protected function getAssetPackageName(): string
     {
         return 'schmeits/filament-character-counter';
     }
