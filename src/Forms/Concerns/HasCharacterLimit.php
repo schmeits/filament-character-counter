@@ -18,7 +18,7 @@ trait HasCharacterLimit
     public function getCharacterLimit(): ?int
     {
         if ($this->maxLength) {
-            return $this->maxLength;
+            return $this->getMaxLength();
         }
 
         return (int) $this->evaluate($this->characterLimit);
