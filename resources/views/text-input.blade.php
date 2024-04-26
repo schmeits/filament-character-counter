@@ -19,6 +19,7 @@
     $suffixIcon = $getSuffixIcon();
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
+    $showInsideControl = $isShownInsideControl();
 
     if ($isPasswordRevealable) {
         $xData = '{ isPasswordRevealed: false }';
@@ -42,6 +43,7 @@
     :component="$getFieldWrapperView()"
     :field="$field"
     :has-inline-label="$hasInlineLabel"
+
     x-data="{characterLimit: {{ $getCharacterLimit() }}, characterCount: {{ mb_strlen($getState() ? $getState() : '') }}}"
 >
     <x-slot
@@ -106,8 +108,13 @@
             "
             @keyup="characterCount = $event.target.value.length"
         />
-        @include('filament-character-counter::partials.character-count-container')
+        @if ($showInsideControl)
+            @include('filament-character-counter::partials.character-count-container')
+        @endif
     </x-filament::input.wrapper>
+    @if (!$showInsideControl)
+        @include('filament-character-counter::partials.character-count-container')
+    @endif
 
     @if ($datalistOptions)
         <datalist id="{{ $id }}-list">

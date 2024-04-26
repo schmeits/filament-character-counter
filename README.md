@@ -50,6 +50,15 @@ TextInput::make('title')
     ->maxLength(50),
 ```
 
+As an additional option, you can place the counter within your component using:
+
+```php
+TextInput::make('title')
+    ->showInsideControl(true)
+    ->characterLimit(50),
+```
+
+
 ## Testing
 
 ```bash

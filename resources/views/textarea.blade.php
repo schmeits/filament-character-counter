@@ -7,6 +7,7 @@
     $rows = $getRows();
     $shouldAutosize = $shouldAutosize();
     $statePath = $getStatePath();
+    $showInsideControl = $isShownInsideControl();
 
     $initialHeight = (($rows ?? 2) * 1.5) + 0.75;
 @endphp
@@ -76,6 +77,11 @@
                     ])
             }}
         ></textarea>
-        @include('filament-character-counter::partials.character-count-container')
+        @if ($showInsideControl)
+            @include('filament-character-counter::partials.character-count-container')
+        @endif
     </x-filament::input.wrapper>
+    @if (!$showInsideControl)
+        @include('filament-character-counter::partials.character-count-container')
+    @endif
 </x-dynamic-component>
