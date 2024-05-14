@@ -16,7 +16,8 @@
     :component="$getFieldWrapperView()"
     :field="$field"
     :has-inline-label="$hasInlineLabel"
-    x-data="{ characterLimit: {{ $getCharacterLimit() }}, characterCount: {{ mb_strlen($getState() ?? '') }}}"
+    x-data="{characterLimit: {{ $getCharacterLimit() }}, characterCount: 0 }"
+    x-init="characterCount={{ mb_strlen($getState() ? $getState() : '') }}"
 >
     <x-slot
         name="label"
