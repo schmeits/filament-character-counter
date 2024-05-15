@@ -6,7 +6,8 @@
 
 This is a [Filament](https://filamentphp.com/) character counter TextField and Textarea form field for Filament v3.2 
 
-![example-screenshot.png](docs-assets/screenshots/example-screenshot.png)
+![example-screenshot.png](https://github.com/schmeits/filament-character-counter/raw/main/docs-assets/screenshots/example-screenshot.png)
+
 
 ## Installation
 
