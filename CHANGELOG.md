@@ -2,6 +2,10 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## 1.2.2 - 2024-05-24
+
+fix: typo in translation for the dutch variant of characters
+
 ## 1.2.1 - 2024-05-14
 
 Fixed a bug if you use ->live() on the Fields, the counter would stutter and the character count was not correct.
