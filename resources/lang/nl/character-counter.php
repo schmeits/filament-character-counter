@@ -2,5 +2,5 @@
 
 return [
     'character_seperator' => ' / ',
-    'character_label' => 'karakers',
+    'character_label' => 'karakters',
 ];
