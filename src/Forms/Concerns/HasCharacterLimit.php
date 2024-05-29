@@ -17,10 +17,12 @@ trait HasCharacterLimit
 
     public function getCharacterLimit(): ?int
     {
-        if ($this->maxLength) {
+        $character_limit = (int) $this->evaluate($this->characterLimit);
+
+        if ($this->maxLength && $character_limit === 0) {
             return $this->getMaxLength();
         }
 
-        return (int) $this->evaluate($this->characterLimit);
+        return $character_limit;
     }
 }
