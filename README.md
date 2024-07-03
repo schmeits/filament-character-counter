@@ -27,7 +27,7 @@ This is the contents of the published translation file:
 
 ```php
 return [
-    'character_seperator' => ' / ',
+    'character_separator' => ' / ',
     'character_label' => 'characters',
 ];
 ```
