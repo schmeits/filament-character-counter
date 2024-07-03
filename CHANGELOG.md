@@ -2,6 +2,11 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## 1.2.4 - 2024-07-03
+
+New: Added German translation (thanks to @dissto)
+Fix: Fixed a translation key (thanks to @dissto)
+
 ## 1.2.3 - 2024-05-29
 
 Fix: Respect maxLength in combination with characterLimit
