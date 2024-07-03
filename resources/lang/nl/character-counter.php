@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'character_seperator' => ' / ',
+    'character_separator' => ' / ',
     'character_label' => 'karakters',
 ];
