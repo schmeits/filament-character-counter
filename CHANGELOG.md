@@ -2,6 +2,10 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## 1.3.1 - 2024-07-15
+
+Changed: Updated README with new RichEditor support
+
 ## 1.3.0 - 2024-07-15
 
 New: Added Arabi clanguage (thanks to Omar @devOMAR-2)
