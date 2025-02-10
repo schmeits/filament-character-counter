@@ -2,6 +2,20 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## 1.3.2 - 2025-02-10
+
+Updated:
+
+- updated rich-editor.blade.php
+  * Fixing async alpine not loading in spa
+  * Add disableGrammarly Method
+  * Use Heroicons for rich editor and Markdown editor
+  * Add CSS class to rich editor editor
+  
+- updated textarea.blade.php
+  * Fixing async alpine not loading in spa
+  
+
 ## 1.3.1 - 2024-07-15
 
 Changed: Updated README with new RichEditor support
