@@ -8,7 +8,7 @@ Changed: Updated README with new RichEditor support
 
 ## 1.3.0 - 2024-07-15
 
-New: Added Arabi clanguage (thanks to Omar @devOMAR-2)
+New: Added Arabic language (thanks to Omar @devOMAR-2)
 New: Added RichEditor support
 
 ## 1.2.4 - 2024-07-03
