@@ -80,6 +80,9 @@
                 }}
             ></textarea>
         </div>
+        @if ($showInsideControl)
+            @include('filament-character-counter::partials.character-count-container')
+        @endif
     </x-filament::input.wrapper>
     @if (!$showInsideControl)
         @include('filament-character-counter::partials.character-count-container')
