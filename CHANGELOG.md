@@ -2,6 +2,10 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## 1.3.4 - 2025-04-28
+
+New : Added French translation (thanks to @tgeorgel)
+
 ## 1.3.3 - 2025-04-16
 
 Fix: The showInsideControl was missing from the Textarea (Thanks @CharlieEtienne for the PR)
