@@ -49,10 +49,12 @@ class FilamentCharacterCounterServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         // Asset Registration
-        FilamentAsset::register(
-            $this->getAssets(),
-            $this->getAssetPackageName()
-        );
+        if (config('character-counter.load_css', true)) {
+            FilamentAsset::register(
+                $this->getAssets(),
+                $this->getAssetPackageName()
+            );
+        }
     }
 
     protected function getAssetPackageName(): string
