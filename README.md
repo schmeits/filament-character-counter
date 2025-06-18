@@ -4,7 +4,9 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schmeits/filament-character-counter/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schmeits/filament-character-counter/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schmeits/filament-character-counter.svg?style=flat-square)](https://packagist.org/packages/schmeits/filament-character-counter)
 
-This is a [Filament](https://filamentphp.com/) character counter TextField, Textarea and RichEditor form field for Filament v3.2 
+This is a [Filament](https://filamentphp.com/) character counter TextField, Textarea and RichEditor form field for Filament v3.2 and above.
+
+If you want to use this package with Filament v4 (beta) see the installation instructions below.
 
 ![example-screenshot.png](https://github.com/schmeits/filament-character-counter/raw/main/docs-assets/screenshots/example-screenshot.png)
 
