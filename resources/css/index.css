@@ -1,1 +1,9 @@
-@import '../../vendor/filament/filament/resources/css/theme.css';
+@reference "tailwindcss";
+
+.fi-fo-field .fi-input-charcounter {
+    @apply relative bottom-0.5 text-end text-xs px-2;
+}
+
+.fi-fo-field .fi-input-charcounter.warning {
+    @apply text-red-500;
+}

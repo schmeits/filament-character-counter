@@ -1,51 +1,46 @@
 @php
     use Filament\Support\Facades\FilamentView;
 
+    $fieldWrapperView = $getFieldWrapperView();
+    $extraAttributeBag = $getExtraAttributeBag();
     $hasInlineLabel = $hasInlineLabel();
     $isConcealed = $isConcealed();
     $isDisabled = $isDisabled();
     $rows = $getRows();
     $shouldAutosize = $shouldAutosize();
     $statePath = $getStatePath();
-    $showInsideControl = $isShownInsideControl();
 
     $initialHeight = (($rows ?? 2) * 1.5) + 0.75;
 @endphp
 
 <x-dynamic-component
-    :component="$getFieldWrapperView()"
+    :component="$fieldWrapperView"
     :field="$field"
     :has-inline-label="$hasInlineLabel"
+    class="fi-fo-textarea-wrp"
     x-data="{characterLimit: {{ $getCharacterLimit() }}, characterCount: 0 }"
     x-init="characterCount={{ mb_strlen($getState() ? $getState() : '') }}"
 >
-    <x-slot
-        name="label"
-        @class([
-            'sm:pt-1.5' => $hasInlineLabel,
-        ])
-    >
-        {{ $getLabel() }}
-    </x-slot>
-
     <x-filament::input.wrapper
         :disabled="$isDisabled"
         :valid="! $errors->has($statePath)"
         :attributes="
-            \Filament\Support\prepare_inherited_attributes($getExtraAttributeBag())
-                ->class(['fi-fo-textarea overflow-hidden'])
+            \Filament\Support\prepare_inherited_attributes($extraAttributeBag)
+                ->class([
+                    'fi-fo-textarea',
+                    'fi-autosizable' => $shouldAutosize,
+                ])
         "
     >
         <div wire:ignore.self style="height: '{{ $initialHeight . 'rem' }}'">
             <textarea
                 @keyup="characterCount = $event.target.value.length"
-                x-ignore
                 @if (FilamentView::hasSpaMode())
-                    {{-- format-ignore-start --}}ax-load="visible || event (ax-modal-opened)"{{-- format-ignore-end --}}
+                    {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
                 @else
-                    ax-load
+                    x-load
                 @endif
-                ax-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
+                x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('textarea', 'filament/forms') }}"
                 x-data="textareaFormComponent({
                             initialHeight: @js($initialHeight),
                             shouldAutosize: @js($shouldAutosize),
@@ -53,9 +48,14 @@
                         })"
                 @if ($shouldAutosize)
                     x-intersect.once="resize()"
-                    x-on:resize.window="resize()"
+                x-on:resize.window="resize()"
                 @endif
                 x-model="state"
+                @if ($isGrammarlyDisabled())
+                    data-gramm="false"
+                data-gramm_editor="false"
+                data-enable-grammarly="false"
+                @endif
                 {{ $getExtraAlpineAttributeBag() }}
                 {{
                     $getExtraInputAttributeBag()
@@ -73,18 +73,15 @@
                             'rows' => $rows,
                             $applyStateBindingModifiers('wire:model') => $statePath,
                         ], escape: false)
-                        ->class([
-                            'block h-full w-full border-none bg-transparent px-3 py-1.5 text-base text-gray-950 placeholder:text-gray-400 focus:ring-0 disabled:text-gray-500 disabled:[-webkit-text-fill-color:theme(colors.gray.500)] disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.400)] dark:text-white dark:placeholder:text-gray-500 dark:disabled:text-gray-400 dark:disabled:[-webkit-text-fill-color:theme(colors.gray.400)] dark:disabled:placeholder:[-webkit-text-fill-color:theme(colors.gray.500)] sm:text-sm sm:leading-6',
-                            'resize-none' => $shouldAutosize,
-                        ])
                 }}
             ></textarea>
         </div>
-        @if ($showInsideControl)
+        @if ($isShownInsideControl())
             @include('filament-character-counter::partials.character-count-container')
         @endif
     </x-filament::input.wrapper>
-    @if (!$showInsideControl)
+    @if (!$isShownInsideControl())
         @include('filament-character-counter::partials.character-count-container')
     @endif
+
 </x-dynamic-component>
