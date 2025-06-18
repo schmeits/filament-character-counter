@@ -13,17 +13,21 @@ If you want to use this package with Filament v4 (beta) see the installation ins
 
 ## Installation
 
+| Plugin Version  | Filament Version | PHP Version |
+|-----------------|------------------|-------------|
+| 1.x             | 3.2 \>           | \> 8.1      |
+| 4.x             | 4.x              | \> 8.2      |
+
 You can install the package via composer:
 
 ```bash
 composer require schmeits/filament-character-counter
 ```
-
-If you are using Filament 4 (beta), you can install the package via composer:
-
-```bash
-  composer require schmeits/filament-character-counter:"^4.0@beta"
-```
+> **Warning**
+> If you are using Filament 4 (beta), you can install the package via composer:
+> ```bash
+>  composer require schmeits/filament-character-counter:"^4.0@beta"
+> ```
 
 You can publish the translations file with:
 
