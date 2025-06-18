@@ -17,6 +17,12 @@ You can install the package via composer:
 composer require schmeits/filament-character-counter
 ```
 
+If you are using Filament 4 (beta), you can install the package via composer:
+
+```bash
+  composer require schmeits/filament-character-counter:"^4.0@beta"
+```
+
 You can publish the translations file with:
 
 ```bash
