@@ -2,6 +2,10 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## 4.0.0-beta2 - 2025-06-18
+
+Updated readme
+
 ## 4.0.0-beta1 - 2025-06-18
 
 First beta release for Filament 4
