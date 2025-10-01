@@ -6,7 +6,7 @@
 
 This is a [Filament](https://filamentphp.com/) character counter TextField, Textarea and RichEditor form field for Filament v3.2 and above.
 
-If you want to use this package with Filament v4 (beta) see the installation instructions below.
+If you want to use this package with Filament v4 see the installation instructions below.
 
 ![example-screenshot.png](https://github.com/schmeits/filament-character-counter/raw/main/docs-assets/screenshots/example-screenshot.png)
 
@@ -15,7 +15,7 @@ If you want to use this package with Filament v4 (beta) see the installation ins
 
 | Plugin Version  | Filament Version | PHP Version |
 |-----------------|------------------|-------------|
-| 1.x             | 3.2 \>           | \> 8.1      |
+| 1.x             | 3.2              | \> 8.1      |
 | 4.x             | 4.x              | \> 8.2      |
 
 You can install the package via composer:
@@ -24,9 +24,9 @@ You can install the package via composer:
 composer require schmeits/filament-character-counter
 ```
 > **Warning**
-> If you are using Filament 4 (beta), you can install the package via composer:
+> If you are using Filament 4, you can install the package via composer:
 > ```bash
->  composer require schmeits/filament-character-counter:"^4.0@beta"
+>  composer require schmeits/filament-character-counter:"^4.0"
 > ```
 
 You can publish the translations file with:
