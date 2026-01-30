@@ -1,7 +1,5 @@
 <?php
 
-use function Schmeits\FilamentCharacterCounter\Tests\livewire;
-
 it('can test', function () {
     expect(true)->toBeTrue();
 });
