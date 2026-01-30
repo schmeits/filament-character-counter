@@ -7,3 +7,7 @@
 .fi-fo-field .fi-input-charcounter.warning {
     @apply text-red-500;
 }
+
+.fi-fo-rich-editor-wrapper .fi-input-charcounter {
+    @apply mt-2;
+}

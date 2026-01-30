@@ -18,7 +18,7 @@ class Livewire extends Component implements HasForms
         return new static;
     }
 
-    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public function form(\Filament\Schemas\Schema $form): \Filament\Schemas\Schema
     {
         return $form
             ->schema([
@@ -36,7 +36,9 @@ class Livewire extends Component implements HasForms
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form->fill([
+            'title' => '1234567890',
+        ]);
     }
 
     public function data($data): static

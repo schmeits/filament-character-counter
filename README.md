@@ -4,9 +4,9 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schmeits/filament-character-counter/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schmeits/filament-character-counter/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schmeits/filament-character-counter.svg?style=flat-square)](https://packagist.org/packages/schmeits/filament-character-counter)
 
-This is a [Filament](https://filamentphp.com/) character counter TextField, Textarea and RichEditor form field for Filament v3.2 and above.
+This is a [Filament](https://filamentphp.com/) character counter TextField, Textarea and RichEditor form field for Filament v4 and v5.
 
-If you want to use this package with Filament v4 see the installation instructions below.
+If you want to use this package with Filament v3.2 see version 1.x.
 
 ![example-screenshot.png](https://github.com/schmeits/filament-character-counter/raw/main/docs-assets/screenshots/example-screenshot.png)
 
@@ -17,17 +17,16 @@ If you want to use this package with Filament v4 see the installation instructio
 |-----------------|------------------|-------------|
 | 1.x             | 3.2              | \> 8.1      |
 | 4.x             | 4.x              | \> 8.2      |
+| 5.x             | 4.x - 5.x        | \> 8.2      |
 
 You can install the package via composer:
 
 ```bash
-composer require schmeits/filament-character-counter
+composer require schmeits/filament-character-counter:"^5.0"
 ```
-> **Warning**
-> If you are using Filament 4, you can install the package via composer:
-> ```bash
->  composer require schmeits/filament-character-counter:"^4.0"
-> ```
+> **Note**
+> - For Filament v4 or v5, use version `^5.0`
+> - For Filament v3.2, use version `^1.0`
 
 You can publish the translations file with:
 

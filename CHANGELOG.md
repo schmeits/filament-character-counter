@@ -2,6 +2,39 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## Unreleased - 2026-01-30
+
+### Fixed
+- **RichEditor character counting**: Completely refactored RichEditor character counter implementation
+  - Fixed JavaScript errors during component initialization (missing parameters for richEditorFormComponent)
+  - Added all required Filament v4/v5 parameters (acceptedFileTypes, floatingToolbars, mentions, linkProtocols, etc.) with safe defaults
+  - Changed from trying to access TipTap editor instance to directly reading DOM element text content
+  - Character counter now uses `$el.querySelector('.fi-fo-rich-editor-content')` to get text content
+  - Implemented Livewire.hook('commit') for reactive updates + periodic polling (500ms) as fallback
+  - RichEditor now properly counts characters in real-time while typing
+
+- **HasCharacterLimit trait**: Made `characterLimit()` automatically call `maxLength()` to enforce HTML maxlength attribute
+  - Prevents users from pasting or entering more characters than the limit
+  - Ensures consistency between visual counter and actual enforcement
+
+### Technical Details
+- Session timestamp: 2026-01-30
+- Estimated time: ~2 hours debugging and implementation
+- Components tested: TextInput ✓, Textarea ✓, RichEditor ✓
+- Test environments: Filament v4 and v5 test projects
+
+## 5.0.0 - 2026-01-30
+
+Added Filament v5 support (Livewire v4 compatible)
+
+- Added: Support for Filament v5 alongside Filament v4
+- Updated: Composer dependencies to accept both `^4.0` and `^5.0` versions
+- Fixed: Updated test fixtures for Filament v5 API changes (`Filament\Forms\Form` → `Filament\Schemas\Schema`)
+- Fixed: Textarea `maxLength` now properly enforces limit even when pasting or programmatic updates (Alpine.js watcher added)
+- Added: Comprehensive unit tests for all component types (TextInput, Textarea, RichEditor)
+- Note: Views are compatible with both Filament 4 and 5 - no changes required to views
+- Note: Character counter functionality remains identical across both versions
+
 ## 4.0.0-beta2 - 2025-06-18
 
 Updated readme

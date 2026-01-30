@@ -12,6 +12,11 @@ trait HasCharacterLimit
     {
         $this->characterLimit = $value;
 
+        // Also set maxLength to enforce the limit in HTML
+        if ($value !== null) {
+            $this->maxLength($value);
+        }
+
         return $this;
     }
 

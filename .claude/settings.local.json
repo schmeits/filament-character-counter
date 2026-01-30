@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:filamentphp.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)",
+      "Bash(wc:*)",
+      "Bash(composer test:*)",
+      "Bash(vendor/bin/pest:*)",
+      "Bash(/c/Users/Schmeitswebsolutions/.config/herd/bin/php.bat:*)",
+      "Bash(gh pr:*)",
+      "Bash(git pull:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(composer create-project:*)",
+      "Bash(/c/Users/Schmeitswebsolutions/.config/herd/bin/composer create-project laravel/laravel filament-4-test --prefer-dist --no-interaction)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright:*)",
+      "Bash(npm run test:browser:*)",
+      "WebFetch(domain:tiptap.dev)",
+      "Bash(npm run build:styles:*)",
+      "Bash(php artisan:*)"
+    ]
+  }
+}

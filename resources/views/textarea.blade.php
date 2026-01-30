@@ -46,6 +46,13 @@
                             shouldAutosize: @js($shouldAutosize),
                             state: $wire.$entangle('{{ $statePath }}'),
                         })"
+                @if ($getMaxLength())
+                    x-init="$watch('state', value => {
+                        if (value && value.length > {{ $getMaxLength() }}) {
+                            state = value.substring(0, {{ $getMaxLength() }});
+                        }
+                    })"
+                @endif
                 @if ($shouldAutosize)
                     x-intersect.once="resize()"
                 x-on:resize.window="resize()"

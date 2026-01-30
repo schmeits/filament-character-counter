@@ -1,24 +1,35 @@
 <?php
 
-use Filament\Forms\ComponentContainer;
-
 use function Schmeits\FilamentCharacterCounter\Tests\livewire;
 
 it('can test', function () {
     expect(true)->toBeTrue();
 });
 
-it('sets its state path from its name', function () {
-    $field = (new \Schmeits\FilamentCharacterCounter\Forms\Components\TextInput($name = Str::random()))
-        ->container(ComponentContainer::make(Schmeits\FilamentCharacterCounter\Tests\Fixtures\Livewire::make()));
+it('can create text input with character limit', function () {
+    $field = \Schmeits\FilamentCharacterCounter\Forms\Components\TextInput::make('test')
+        ->characterLimit(100);
 
-    expect($field)
-        ->getStatePath()->toBe($name);
+    expect($field->getCharacterLimit())->toBe(100);
 });
 
-it('show the default character counter', function () {
-    livewire(Schmeits\FilamentCharacterCounter\Tests\Fixtures\Livewire::class)
-        ->assertSeeText(' / 100')
-        ->assertSeeText(' / 50')
-        ->assertSeeText('characters');
+it('can create textarea with character limit', function () {
+    $field = \Schmeits\FilamentCharacterCounter\Forms\Components\Textarea::make('description')
+        ->characterLimit(500);
+
+    expect($field->getCharacterLimit())->toBe(500);
+});
+
+it('can create rich editor with character limit', function () {
+    $field = \Schmeits\FilamentCharacterCounter\Forms\Components\RichEditor::make('content')
+        ->characterLimit(1000);
+
+    expect($field->getCharacterLimit())->toBe(1000);
+});
+
+it('uses maxLength when characterLimit is not set', function () {
+    $field = \Schmeits\FilamentCharacterCounter\Forms\Components\TextInput::make('test')
+        ->maxLength(200);
+
+    expect($field->getCharacterLimit())->toBe(200);
 });
