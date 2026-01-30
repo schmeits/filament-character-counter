@@ -35,6 +35,15 @@ All notable changes to `filament-character-counter` will be documented in this f
 - Textarea maxLength enforcement with Alpine.js watcher
 - Views compatible with both Filament 4 and 5
 
+**CI/CD Improvements**:
+
+- GitHub Actions test matrix supports both Laravel 11 and 12
+- Conditional dev dependency installation via matrix parameters
+- Laravel 11: installs larastan ^2.9 and pest-plugin-laravel ^3.0
+- Laravel 12: skips incompatible packages (not yet supported by these tools)
+- Updated testbench constraint to support both versions (^9.0 || ^10.0)
+- PHPStan workflow updated to PHP 8.2 minimum requirement
+
 ### Testing
 
 Tested and working in:
