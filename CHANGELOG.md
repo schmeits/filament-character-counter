@@ -2,22 +2,69 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## v5.0.0 - Filament v5 Support & RichEditor Fixes - 2026-01-30
+
+### What's New
+
+#### ✨ Added
+
+- **Filament v5 Support**: Full compatibility with Filament v5 (Livewire v4) alongside v4
+- **Comprehensive Tests**: Unit tests for all component types (TextInput, Textarea, RichEditor)
+- **Better Spacing**: Proper spacing for RichEditor character counter
+
+#### 🐛 Fixed
+
+**RichEditor Character Counting** - Complete refactor:
+
+- Fixed JavaScript initialization errors
+- Added all required Filament v4/v5 parameters with safe defaults
+- Switched to direct DOM text content reading for accuracy
+- Implemented Livewire.hook('commit') for reactive updates
+- Character counter now updates in real-time while typing
+
+**HasCharacterLimit Trait**:
+
+- Automatically enforces HTML maxlength attribute
+- Prevents paste overflow beyond character limit
+- Ensures consistency between visual counter and enforcement
+
+#### 🔧 Technical Details
+
+- RichEditor uses `$el.querySelector()` for DOM-based character counting
+- Added `.fi-fo-rich-editor-wrapper` CSS class for proper spacing
+- Textarea maxLength enforcement with Alpine.js watcher
+- Views compatible with both Filament 4 and 5
+
+### Testing
+
+Tested and working in:
+
+- ✅ Filament v4 (Livewire v3)
+- ✅ Filament v5 (Livewire v4)
+
+All components (TextInput, Textarea, RichEditor) working correctly in both versions.
+
 ## Unreleased - 2026-01-30
 
 ### Fixed
+
 - **RichEditor character counting**: Completely refactored RichEditor character counter implementation
+  
   - Fixed JavaScript errors during component initialization (missing parameters for richEditorFormComponent)
   - Added all required Filament v4/v5 parameters (acceptedFileTypes, floatingToolbars, mentions, linkProtocols, etc.) with safe defaults
   - Changed from trying to access TipTap editor instance to directly reading DOM element text content
   - Character counter now uses `$el.querySelector('.fi-fo-rich-editor-content')` to get text content
   - Implemented Livewire.hook('commit') for reactive updates + periodic polling (500ms) as fallback
   - RichEditor now properly counts characters in real-time while typing
-
+  
 - **HasCharacterLimit trait**: Made `characterLimit()` automatically call `maxLength()` to enforce HTML maxlength attribute
+  
   - Prevents users from pasting or entering more characters than the limit
   - Ensures consistency between visual counter and actual enforcement
+  
 
 ### Technical Details
+
 - Session timestamp: 2026-01-30
 - Estimated time: ~2 hours debugging and implementation
 - Components tested: TextInput ✓, Textarea ✓, RichEditor ✓
