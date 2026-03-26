@@ -2,6 +2,16 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## v5.0.1 - 2026-03-26
+
+## Fixed
+
+- **characterLimit() is now a soft limit again** (#36): `characterLimit()` no longer enforces HTML `maxlength` or validation. Use `maxLength()` for hard enforcement, or combine both.
+
+- Fixed test suite (removed obsolete BladeCaptureDirective dependency)
+
+- Fixed PHPStan config (removed deprecated options)
+
 ## v5.0.0 - Filament v5 Support & RichEditor Fixes - 2026-01-30
 
 ### What's New
