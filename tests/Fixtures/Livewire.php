@@ -4,6 +4,7 @@ namespace Schmeits\FilamentCharacterCounter\Tests\Fixtures;
 
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Schemas\Schema;
 use Livewire\Component;
 use Schmeits\FilamentCharacterCounter\Forms\Components\TextInput;
 
@@ -18,7 +19,7 @@ class Livewire extends Component implements HasForms
         return new static;
     }
 
-    public function form(\Filament\Schemas\Schema $form): \Filament\Schemas\Schema
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([
