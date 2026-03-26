@@ -22,7 +22,9 @@
       "Bash(npm run test:browser:*)",
       "WebFetch(domain:tiptap.dev)",
       "Bash(npm run build:styles:*)",
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh api:*)"
     ]
   }
 }
