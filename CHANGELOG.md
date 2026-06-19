@@ -2,10 +2,11 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
-## Unreleased
+## v5.1.0 - 2026-06-19
 
 ### Added
-- `showCharacterCounter(bool|Closure $condition = true)` method to conditionnally display the character counter on individual fields
+- `showCharacterCounter(bool|Closure $condition = true)` method to conditionally display the character counter on individual fields (#41, thanks @mediatorviolet)
+- Central Kurdish (ckb) translation (#43, thanks @Hamoi1)
 
 ## v5.0.1 - 2026-03-26
 
