@@ -10,3 +10,23 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+    cooldown:
+      default-days: 3
+
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    cooldown:
+      default-days: 3
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    cooldown:
+      default-days: 3
