@@ -1,164 +1,86 @@
 <?php
 
-/**
- * Component tests for the filament-character-counter package.
+declare(strict_types=1);
+
+/*
+ * tests/ComponentTest.php
  *
- * Tests verify that characterLimit() acts as a soft limit (visual only)
- * and maxLength() acts as a hard limit (HTML enforcement + validation).
+ * The PHP API of the fields: characterLimit() is a soft limit that only drives
+ * the counter, maxLength() stays the hard limit that the browser and
+ * validation enforce.
  */
 
 use Schmeits\FilamentCharacterCounter\Forms\Components\RichEditor;
 use Schmeits\FilamentCharacterCounter\Forms\Components\Textarea;
 use Schmeits\FilamentCharacterCounter\Forms\Components\TextInput;
 
-it('can test', function () {
-    expect(true)->toBeTrue();
-});
+dataset('fields', [
+    'text input' => fn () => TextInput::make('test'),
+    'textarea' => fn () => Textarea::make('test'),
+    'rich editor' => fn () => RichEditor::make('test'),
+]);
 
-// --- characterLimit (soft limit) ---
+it('uses the character limit for the counter', function ($field) {
+    expect($field->characterLimit(100)->getCharacterLimit())->toBe(100);
+})->with('fields');
 
-it('can create text input with character limit', function () {
-    $field = TextInput::make('test')
-        ->characterLimit(100);
+it('does not set maxLength from the character limit', function ($field) {
+    expect($field->characterLimit(100)->getMaxLength())->toBeNull();
+})->with('fields');
 
-    expect($field->getCharacterLimit())->toBe(100);
-});
+it('accepts a closure as character limit', function ($field) {
+    expect($field->characterLimit(fn (): int => 42)->getCharacterLimit())->toBe(42);
+})->with('fields');
 
-it('can create textarea with character limit', function () {
-    $field = Textarea::make('description')
-        ->characterLimit(500);
+it('returns 0 when there is no limit at all', function ($field) {
+    expect($field->getCharacterLimit())->toBe(0);
+})->with('fields');
 
-    expect($field->getCharacterLimit())->toBe(500);
-});
+it('treats a null, zero or negative character limit as no limit', function ($limit) {
+    expect(TextInput::make('test')->characterLimit($limit)->getCharacterLimit())->toBe(0);
+})->with([
+    'null' => null,
+    'closure returning null' => fn () => fn (): ?int => null,
+    'zero' => 0,
+    'negative' => -5,
+]);
 
-it('can create rich editor with character limit', function () {
-    $field = RichEditor::make('content')
-        ->characterLimit(1000);
-
-    expect($field->getCharacterLimit())->toBe(1000);
-});
-
-it('characterLimit does not set maxLength on text input', function () {
-    $field = TextInput::make('test')
-        ->characterLimit(100);
-
-    expect($field->getCharacterLimit())->toBe(100)
-        ->and($field->getMaxLength())->toBeNull();
-});
-
-it('characterLimit does not set maxLength on textarea', function () {
-    $field = Textarea::make('test')
-        ->characterLimit(100);
-
-    expect($field->getCharacterLimit())->toBe(100)
-        ->and($field->getMaxLength())->toBeNull();
-});
-
-it('characterLimit does not set maxLength on rich editor', function () {
-    $field = RichEditor::make('test')
-        ->characterLimit(100);
-
-    expect($field->getCharacterLimit())->toBe(100)
-        ->and($field->getMaxLength())->toBeNull();
-});
-
-// --- maxLength (hard limit) ---
-
-it('uses maxLength when characterLimit is not set', function () {
-    $field = TextInput::make('test')
-        ->maxLength(200);
-
-    expect($field->getCharacterLimit())->toBe(200);
-});
-
-it('maxLength sets both character limit and maxLength on text input', function () {
-    $field = TextInput::make('test')
-        ->maxLength(200);
+it('falls back to maxLength when no character limit is set', function () {
+    $field = TextInput::make('test')->maxLength(200);
 
     expect($field->getCharacterLimit())->toBe(200)
         ->and($field->getMaxLength())->toBe(200);
 });
 
-it('maxLength sets both character limit and maxLength on textarea', function () {
-    $field = Textarea::make('test')
-        ->maxLength(200);
-
-    expect($field->getCharacterLimit())->toBe(200)
-        ->and($field->getMaxLength())->toBe(200);
+it('falls back to maxLength when the character limit is null', function () {
+    expect(Textarea::make('test')->maxLength(200)->characterLimit(null)->getCharacterLimit())->toBe(200);
 });
 
-// --- characterLimit + maxLength combined ---
+it('lets the character limit win from maxLength, in either order', function () {
+    $before = TextInput::make('test')->maxLength(200)->characterLimit(150);
+    $after = TextInput::make('test')->characterLimit(150)->maxLength(200);
 
-it('characterLimit overrides maxLength for counter display', function () {
-    $field = TextInput::make('test')
-        ->maxLength(200)
-        ->characterLimit(150);
-
-    // Counter shows the characterLimit value
-    expect($field->getCharacterLimit())->toBe(150)
-        // But HTML maxLength stays at 200 (hard enforcement)
-        ->and($field->getMaxLength())->toBe(200);
+    expect($before->getCharacterLimit())->toBe(150)
+        ->and($before->getMaxLength())->toBe(200)
+        ->and($after->getCharacterLimit())->toBe(150)
+        ->and($after->getMaxLength())->toBe(200);
 });
 
-it('maxLength after characterLimit does not override the counter', function () {
-    $field = TextInput::make('test')
-        ->characterLimit(150)
-        ->maxLength(200);
+it('shows the counter by default', function ($field) {
+    expect($field->shouldShowCharacterCounter())->toBeTrue();
+})->with('fields');
 
-    // Counter still shows characterLimit
-    expect($field->getCharacterLimit())->toBe(150)
-        // Hard limit is maxLength
-        ->and($field->getMaxLength())->toBe(200);
+it('hides the counter when switched off, also via a closure', function ($field) {
+    expect($field->showCharacterCounter(false)->shouldShowCharacterCounter())->toBeFalse()
+        ->and($field->showCharacterCounter(fn (): bool => false)->shouldShowCharacterCounter())->toBeFalse();
+})->with('fields');
+
+it('keeps getShowCharacterCounter() working for existing code', function () {
+    expect(TextInput::make('test')->showCharacterCounter(false)->getShowCharacterCounter())->toBeFalse();
 });
 
-// --- showCharacterCounter ---
-
-it('shows the character counter by default on text input', function () {
-    $field = TextInput::make('test')->characterLimit(100);
-
-    expect($field->getShowCharacterCounter())->toBeTrue();
-});
-
-it('hides the character counter when set to false on text input', function () {
-    $field = TextInput::make('test')
-        ->characterLimit(100)
-        ->showCharacterCounter(false);
-
-    expect($field->getShowCharacterCounter())->toBeFalse();
-});
-
-it('shows the character counter by default on textarea', function () {
-    $field = Textarea::make('test')->characterLimit(100);
-
-    expect($field->getShowCharacterCounter())->toBeTrue();
-});
-
-it('hides the character counter when set to false on textarea', function () {
-    $field = Textarea::make('test')
-        ->characterLimit(100)
-        ->showCharacterCounter(false);
-
-    expect($field->getShowCharacterCounter())->toBeFalse();
-});
-
-it('shows the character counter by default on rich editor', function () {
-    $field = RichEditor::make('test')->characterLimit(100);
-
-    expect($field->getShowCharacterCounter())->toBeTrue();
-});
-
-it('hides the character counter when set to false on rich editor', function () {
-    $field = RichEditor::make('test')
-        ->characterLimit(100)
-        ->showCharacterCounter(false);
-
-    expect($field->getShowCharacterCounter())->toBeFalse();
-});
-
-it('accepts a closure for showCharacterCounter', function () {
-    $field = TextInput::make('test')
-        ->characterLimit(100)
-        ->showCharacterCounter(fn () => false);
-
-    expect($field->getShowCharacterCounter())->toBeFalse();
+it('can show the counter inside the control', function () {
+    expect(TextInput::make('test')->isShownInsideControl())->toBeFalse()
+        ->and(TextInput::make('test')->showInsideControl()->isShownInsideControl())->toBeTrue()
+        ->and(Textarea::make('test')->showInsideControl(fn (): bool => true)->isShownInsideControl())->toBeTrue();
 });

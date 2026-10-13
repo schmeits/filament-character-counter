@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * src/FilamentCharacterCounterServiceProvider.php
+ *
+ * Registers the config, views, translations and stylesheet of the package.
+ */
+
 namespace Schmeits\FilamentCharacterCounter;
 
 use Filament\Support\Assets\Asset;
@@ -49,8 +57,6 @@ class FilamentCharacterCounterServiceProvider extends PackageServiceProvider
             $package->hasViews(static::$viewNamespace);
         }
     }
-
-    public function packageRegistered(): void {}
 
     public function packageBooted(): void
     {

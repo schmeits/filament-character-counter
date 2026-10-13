@@ -1,3 +1,10 @@
+{{--
+    resources/views/text-input.blade.php
+
+    Filament's text input with the character counter. The count follows the
+    Livewire state (paste, autofill, $set(), reset) and every input event, and
+    counts per code point like Laravel's max: rule.
+--}}
 @php
     use Filament\Forms\Components\TextInput\Actions\HidePasswordAction;
     use Filament\Forms\Components\TextInput\Actions\ShowPasswordAction;
@@ -24,6 +31,17 @@
     $suffixLabel = $getSuffixLabel();
     $statePath = $getStatePath();
 
+    $showCharacterCounter = $shouldShowCharacterCounter();
+    $characterCount = $getCharacterCount();
+    $characterLimit = $getCharacterLimit();
+    $counterId = $getCharacterCounterId();
+
+    $accessibilityAttributes = method_exists($field, 'getAccessibilityAttributes') ? $field->getAccessibilityAttributes() : [];
+
+    if ($showCharacterCounter) {
+        $accessibilityAttributes['aria-describedby'] = trim(($accessibilityAttributes['aria-describedby'] ?? '') . ' ' . $counterId);
+    }
+
     if ($isPasswordRevealable) {
         $xData = '{ isPasswordRevealed: false }';
     } elseif (count($extraAlpineAttributes) || filled($mask)) {
@@ -43,6 +61,7 @@
     $inputAttributes = $getExtraInputAttributeBag()
         ->merge($extraAlpineAttributes, escape: false)
         ->merge([
+            ...$accessibilityAttributes,
             'autocapitalize' => $getAutocapitalize(),
             'autocomplete' => $getAutocomplete(),
             'autofocus' => $isAutofocused(),
@@ -75,8 +94,15 @@
     :field="$field"
     :has-inline-label="$hasInlineLabel"
     class="fi-fo-text-input-wrp"
-    x-data="{characterLimit: {{ $getCharacterLimit() }}, characterCount: 0 }"
-    x-init="characterCount={{ mb_strlen($getState() ? $getState() : '') }}"
+    x-data="{
+        characterLimit: {{ $characterLimit }},
+        characterCount: {{ $characterCount }},
+        countCharacters(value) {
+            return [...String(value ?? '')].length
+        },
+    }"
+    x-effect="characterCount = countCharacters($wire.$get('{{ $statePath }}'))"
+    x-on:input="characterCount = countCharacters($event.target.value)"
 >
     <x-filament::input.wrapper
         :disabled="$isDisabled"
@@ -105,13 +131,12 @@
                     'fi-input-has-inline-suffix' => $isSuffixInline && (count($suffixActions) || $suffixIcon || filled($suffixLabel)),
                 ])
             }}
-            @keyup="characterCount = $event.target.value.length"
         />
-        @if ($isShownInsideControl() && $getShowCharacterCounter())
+        @if ($showCharacterCounter && $isShownInsideControl())
             @include('filament-character-counter::partials.character-count-container')
         @endif
     </x-filament::input.wrapper>
-    @if (!$isShownInsideControl() && $getShowCharacterCounter())
+    @if ($showCharacterCounter && (! $isShownInsideControl()))
         @include('filament-character-counter::partials.character-count-container')
     @endif
 

@@ -2,6 +2,29 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
+## Unreleased
+
+### Fixed
+- RichEditor: Filament now renders the editor itself and the counter is placed around it. File attachments, mentions, floating toolbars, link protocols and resizable images were silently switched off by the copied view.
+- The counter no longer breaks when the limit is empty: the limit is always a number, so Alpine gets valid JavaScript.
+- The counter now follows every input event and the Livewire state, so it updates on paste, autofill, dictation, `$set()` and form resets, not only on key presses.
+- Characters are counted per code point in the browser too, so an emoji counts as one, like Laravel's `max:` rule.
+- The RichEditor counter no longer polls every 500 ms and no longer leaks a Livewire hook per editor.
+- Invalid inline height on the Textarea.
+- Development files (`.claude/`, `CLAUDE.md`, `package-lock.json`, `stubs/` and more) are no longer included in the Packagist archive.
+
+### Added
+- Going over the limit is shown in words, for example "(12 too many)", and in bold, not by colour alone. The message is announced to screen readers and the input points at the counter with `aria-describedby`.
+- `characters_over` translation in every language.
+- `shouldShowCharacterCounter()`; `getShowCharacterCounter()` is deprecated.
+- Support for Laravel 13. CI now tests PHP 8.2 to 8.5 on Laravel 12 and 13 with Filament 4 and 5. Laravel 11 is no longer tested: Composer refuses its releases because of open security advisories.
+
+### Changed
+- The package requires `filament/forms` and `filament/support` instead of the whole `filament/filament` panel package.
+- The stylesheet is plain CSS using Filament's colour variables (dark mode included), so there is no build step anymore. The exceeded class is now `fi-input-charcounter-exceeded` instead of `warning`.
+- The old translation key `character_seperator` is no longer read.
+- `declare(strict_types=1)` everywhere, PHPStan on the highest level.
+
 ## v5.1.0 - 2026-06-19
 
 ### Added
@@ -10,7 +33,7 @@ All notable changes to `filament-character-counter` will be documented in this f
 
 ## v5.0.1 - 2026-03-26
 
-## Fixed
+### Fixed
 
 - **characterLimit() is now a soft limit again** (#36): `characterLimit()` no longer enforces HTML `maxlength` or validation. Use `maxLength()` for hard enforcement, or combine both.
 
@@ -22,13 +45,13 @@ All notable changes to `filament-character-counter` will be documented in this f
 
 ### What's New
 
-#### ✨ Added
+#### Added
 
 - **Filament v5 Support**: Full compatibility with Filament v5 (Livewire v4) alongside v4
 - **Comprehensive Tests**: Unit tests for all component types (TextInput, Textarea, RichEditor)
 - **Better Spacing**: Proper spacing for RichEditor character counter
 
-#### 🐛 Fixed
+#### Fixed
 
 **RichEditor Character Counting** - Complete refactor:
 
@@ -40,11 +63,9 @@ All notable changes to `filament-character-counter` will be documented in this f
 
 **HasCharacterLimit Trait**:
 
-- Automatically enforces HTML maxlength attribute
-- Prevents paste overflow beyond character limit
-- Ensures consistency between visual counter and enforcement
+- Automatically enforced the HTML maxlength attribute (reverted in v5.0.1: characterLimit() is a soft limit, use maxLength() for enforcement)
 
-#### 🔧 Technical Details
+#### Technical Details
 
 - RichEditor uses `$el.querySelector()` for DOM-based character counting
 - Added `.fi-fo-rich-editor-wrapper` CSS class for proper spacing

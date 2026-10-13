@@ -31,15 +31,8 @@ vendor/bin/pint          # Run Pint directly
 vendor/bin/phpstan analyse  # Run PHPStan directly
 ```
 
-### Asset Building
-```bash
-npm run dev              # Watch and compile CSS styles
-npm run build            # Build and minify CSS for production
-npm run dev:styles       # Watch Tailwind CSS compilation
-npm run build:styles     # Build and purge CSS
-```
-
-**IMPORTANT**: Do NOT run `npm run build` unless explicitly instructed by the user.
+### Assets
+The stylesheet `resources/dist/filament-character-counter.css` is plain CSS and is edited by hand. There is no npm toolchain or build step.
 
 ## Architecture
 
@@ -56,7 +49,7 @@ The package uses a trait-based architecture to extend Filament's core form compo
 - `HasCharacterLimit` - Adds character limit functionality, automatically uses `maxLength` if no explicit limit is set
 - `CanBeShownInsideControl` - Allows counter to be displayed inside the form control
 
-Each component class is minimal, simply extending the base Filament component and applying the necessary traits. The custom view is defined with `protected string $view`.
+Each component class is minimal, simply extending the base Filament component and applying the necessary traits. TextInput and Textarea use their own copy of the Filament view (`protected string $view`) so the counter can sit inside the input. RichEditor does not: it overrides `toHtml()` and wraps Filament's own rendering in `resources/views/rich-editor.blade.php`.
 
 ### Service Provider
 

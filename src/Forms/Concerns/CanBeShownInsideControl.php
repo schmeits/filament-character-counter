@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * src/Forms/Concerns/CanBeShownInsideControl.php
+ *
+ * Lets a field render its counter inside the input wrapper instead of below
+ * it. Supported by TextInput and Textarea.
+ */
+
 namespace Schmeits\FilamentCharacterCounter\Forms\Concerns;
 
 use Closure;
