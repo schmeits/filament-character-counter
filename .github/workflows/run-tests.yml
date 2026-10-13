@@ -57,3 +57,13 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest --ci
+
+  # One stable check name for branch protection, whatever the matrix looks like.
+  tests-passed:
+    name: tests-passed
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All matrix jobs passed
+        run: test "${{ needs.test.result }}" = "success"
