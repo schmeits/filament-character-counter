@@ -2,7 +2,7 @@
 
 All notable changes to `filament-character-counter` will be documented in this file.
 
-## Unreleased
+## v5.2.0 - 2026-10-13
 
 ### Fixed
 - RichEditor: Filament now renders the editor itself and the counter is placed around it. File attachments, mentions, floating toolbars, link protocols and resizable images were silently switched off by the copied view.
@@ -90,7 +90,7 @@ Tested and working in:
 
 All components (TextInput, Textarea, RichEditor) working correctly in both versions.
 
-## Unreleased - 2026-01-30
+## v5.2.0 - 2026-10-13
 
 ### Fixed
 
