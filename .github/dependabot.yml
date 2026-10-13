@@ -1,5 +1,5 @@
 # Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
@@ -10,8 +10,13 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+    open-pull-requests-limit: 5
     cooldown:
       default-days: 3
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "composer"
     directory: "/"
@@ -19,14 +24,14 @@ updates:
       interval: "weekly"
     labels:
       - "dependencies"
+    open-pull-requests-limit: 5
     cooldown:
       default-days: 3
-
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-    cooldown:
-      default-days: 3
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+      production-minor-and-patch:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"

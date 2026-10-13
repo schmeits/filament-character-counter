@@ -1,93 +1,185 @@
 <?php
 
-/**
- * Smoke tests that actually compile and render the bundled blade views within
- * a real Livewire and Filament form context.
+declare(strict_types=1);
+
+/*
+ * tests/RenderTest.php
  *
- * WHY: this package ships its own copies of the Filament views. They are tightly
- * coupled to Filament's internal view helpers ($getFieldWrapperView,
- * $getExtraInputAttributeBag, and dozens of others). A Filament upgrade that
- * changes any of those breaks this package without a single line of our PHP
- * changing. The existing unit tests on characterLimit() do not catch that,
- * because they render nothing.
+ * Renders every field in a real Livewire and Filament form and checks the
+ * counter markup: placement, limits, the exceeded message, translations,
+ * accessibility attributes and valid Alpine state.
  */
 
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
-use Schmeits\FilamentCharacterCounter\Forms\Components\RichEditor;
 use Schmeits\FilamentCharacterCounter\Forms\Components\Textarea;
 use Schmeits\FilamentCharacterCounter\Forms\Components\TextInput;
 use Schmeits\FilamentCharacterCounter\Tests\Fixtures\AllFieldsLivewire;
 
-it('registers the package view namespace', function () {
-    expect(View::getFinder()->getHints())->toHaveKey('filament-character-counter');
-});
+function renderAllFields(): string
+{
+    return Livewire::test(AllFieldsLivewire::class)->html();
+}
 
-it('finds the text-input field view', function () {
-    expect(View::exists('filament-character-counter::text-input'))->toBeTrue();
-});
+function renderedDom(string $html): DOMXPath
+{
+    $document = new DOMDocument;
 
-it('finds the textarea field view', function () {
-    expect(View::exists('filament-character-counter::textarea'))->toBeTrue();
-});
+    libxml_use_internal_errors(true);
+    $document->loadHTML('<?xml encoding="utf-8"?>' . $html);
+    libxml_clear_errors();
 
-it('finds the rich-editor field view', function () {
-    expect(View::exists('filament-character-counter::rich-editor'))->toBeTrue();
-});
+    return new DOMXPath($document);
+}
 
-it('finds the shared partial with the counter', function () {
-    // All three views include this partial. If it disappears, every field only
-    // fails while rendering in production.
-    expect(View::exists('filament-character-counter::partials.character-count-container'))->toBeTrue();
-});
+function counterFor(DOMXPath $dom, string $field): ?DOMElement
+{
+    $node = $dom->query("//*[@id='form.{$field}-character-counter']")->item(0);
 
-it('points every field at a view that exists', function () {
-    // The $view property is protected, so we read it via reflection. This also
-    // covers a typo in the view name that would surface nowhere else.
-    foreach ([TextInput::class, Textarea::class, RichEditor::class] as $component) {
-        $view = (new ReflectionClass($component))
-            ->getDefaultProperties()['view'];
+    return $node instanceof DOMElement ? $node : null;
+}
+
+function counterText(DOMXPath $dom, string $field): string
+{
+    return trim((string) preg_replace('/\s+/u', ' ', counterFor($dom, $field)->textContent ?? ''));
+}
+
+it('points the text fields at views that exist', function () {
+    foreach ([TextInput::class, Textarea::class] as $component) {
+        $view = (new ReflectionClass($component))->getDefaultProperties()['view'];
 
         expect(View::exists($view))->toBeTrue("View {$view} of {$component} does not exist.");
     }
+
+    expect(View::exists('filament-character-counter::rich-editor'))->toBeTrue()
+        ->and(View::exists('filament-character-counter::partials.character-count-container'))->toBeTrue();
 });
 
-it('renders a form with all three fields without errors', function () {
-    // The core smoke test of this package: does every view compile against the
-    // current Filament version?
-    Livewire::test(AllFieldsLivewire::class)
-        ->assertOk();
+it('renders a form with every field without errors', function () {
+    Livewire::test(AllFieldsLivewire::class)->assertOk();
 });
 
-it('shows the counter container in the rendered HTML', function () {
-    // Proves the partial actually came along and did not silently drop out
-    // because of a changed @include convention.
-    Livewire::test(AllFieldsLivewire::class)
-        ->assertSee('fi-input-charcounter', escape: false);
+it('renders exactly one counter per field that shows one', function () {
+    $html = renderAllFields();
+    $dom = renderedDom($html);
+
+    foreach (['title', 'subtitle', 'free_text', 'too_long', 'closure_limit', 'disabled_field', 'description', 'notes', 'content'] as $field) {
+        expect(substr_count($html, "id=\"form.{$field}-character-counter\""))->toBe(1, "Field {$field} should have one counter.");
+    }
+
+    expect(counterFor($dom, 'hidden_counter'))->toBeNull()
+        ->and(counterFor($dom, 'plain_content'))->toBeNull();
 });
 
-it('sets the characterLimit as Alpine state in the HTML', function () {
-    // The whole package runs on these two Alpine variables. If they disappear
-    // from the view, the counter counts nothing anymore.
-    Livewire::test(AllFieldsLivewire::class)
-        ->assertSee('characterLimit: 100', escape: false)
-        ->assertSee('characterCount', escape: false);
+it('shows the count and the limit', function () {
+    $dom = renderedDom(renderAllFields());
+
+    expect(counterText($dom, 'title'))->toBe('10 / 100 characters')
+        ->and(counterText($dom, 'subtitle'))->toBe('0 / 60 characters')
+        ->and(counterText($dom, 'description'))->toBe('0 / 500 characters');
 });
 
-it('omits the counter when showCharacterCounter is off', function () {
-    // The negative side of the same switch: the hidden_counter field has a
-    // limit of 100 but the counter turned off, so that limit must not appear in
-    // the HTML.
-    $html = Livewire::test(AllFieldsLivewire::class)->html();
+it('shows only the count when there is no limit', function () {
+    $dom = renderedDom(renderAllFields());
 
-    // The counter is present for title (100), but the number of times the
-    // counter container appears must be lower than the number of fields.
-    expect(substr_count($html, 'fi-input-charcounter'))->toBe(4);
+    expect(counterText($dom, 'free_text'))->toBe('0 characters')
+        ->and(counterText($dom, 'closure_limit'))->toBe('0 characters');
 });
 
-it('renders a single text-input field with an empty value', function () {
-    // Edge case: mb_strlen() on a null state. That used to go wrong in views
-    // that feed $getState() straight into a string function.
-    Livewire::test(AllFieldsLivewire::class)
-        ->assertSee('x-init', escape: false);
+it('counts per code point on the first render', function () {
+    // 'héllo😀!' is 7 code points but 8 UTF-16 units.
+    expect(counterText(renderedDom(renderAllFields()), 'too_long'))->toStartWith('7 / 5 characters');
+});
+
+it('says how many characters are over the limit, not only in colour', function () {
+    $dom = renderedDom(renderAllFields());
+
+    expect(counterFor($dom, 'too_long')?->getAttribute('class'))->toContain('fi-input-charcounter-exceeded')
+        ->and(counterText($dom, 'too_long'))->toBe('7 / 5 characters (2 too many)');
+});
+
+it('hides the over-the-limit message while under the limit', function () {
+    $dom = renderedDom(renderAllFields());
+    $message = $dom->query("//*[@id='form.title-character-counter']//*[@x-show]")->item(0);
+
+    expect($message)->toBeInstanceOf(DOMElement::class)
+        ->and($message instanceof DOMElement ? $message->getAttribute('style') : '')->toContain('display: none')
+        ->and(counterFor($dom, 'title')?->getAttribute('class'))->not->toContain('fi-input-charcounter-exceeded');
+});
+
+it('announces the over-the-limit message to screen readers', function () {
+    $dom = renderedDom(renderAllFields());
+
+    expect($dom->query("//*[@id='form.too_long-character-counter']//*[@role='status'][@aria-live='polite']")->length)->toBe(1);
+});
+
+it('links the input to its counter with aria-describedby', function () {
+    $dom = renderedDom(renderAllFields());
+
+    foreach (['title' => 'input', 'description' => 'textarea'] as $field => $element) {
+        $input = $dom->query("//{$element}[@id='form.{$field}']")->item(0);
+
+        expect($input)->toBeInstanceOf(DOMElement::class)
+            ->and(explode(' ', $input instanceof DOMElement ? $input->getAttribute('aria-describedby') : ''))->toContain("form.{$field}-character-counter");
+    }
+});
+
+it('translates the counter', function () {
+    app()->setLocale('nl');
+
+    expect(counterText(renderedDom(renderAllFields()), 'too_long'))->toBe('7 / 5 karakters (2 te veel)');
+});
+
+it('places the counter inside the control only when asked', function () {
+    $dom = renderedDom(renderAllFields());
+    $insideWrapper = fn (string $field): int => $dom->query("//*[contains(concat(' ', normalize-space(@class), ' '), ' fi-input-wrp ')]//*[@id='form.{$field}-character-counter']")->length;
+
+    expect($insideWrapper('subtitle'))->toBe(1)
+        ->and($insideWrapper('notes'))->toBe(1)
+        ->and($insideWrapper('title'))->toBe(0)
+        ->and($insideWrapper('description'))->toBe(0);
+});
+
+it('always renders a numeric limit in the Alpine state', function () {
+    // An empty limit used to render "characterLimit: ," which breaks Alpine.
+    $html = renderAllFields();
+
+    expect($html)->not->toMatch('/characterLimit:\s*,/')
+        ->and($html)->toContain('characterLimit: 0')
+        ->and($html)->toContain('characterLimit: 100');
+});
+
+it('follows the Livewire state and every input event instead of keyup', function () {
+    $html = renderAllFields();
+
+    expect($html)->not->toContain('keyup')
+        ->and($html)->toContain('x-on:input="characterCount = countCharacters($event.target.value)"')
+        ->and($html)->toContain('$wire.$get(&#039;data.title&#039;)');
+});
+
+it('renders a valid height on the textarea', function () {
+    expect(renderAllFields())->toContain('style="height: 5.25rem"');
+});
+
+it('keeps the counter on a disabled field', function () {
+    expect(counterText(renderedDom(renderAllFields()), 'disabled_field'))->toBe('0 / 20 characters');
+});
+
+it('lets Filament render the rich editor itself, with all its features', function () {
+    $html = renderAllFields();
+    $dom = renderedDom($html);
+
+    $wrapper = $dom->query("//*[contains(@class, 'fi-input-charcounter-rich-editor')]")->item(0);
+
+    expect($wrapper)->toBeInstanceOf(DOMElement::class)
+        ->and($dom->query(".//*[@id='form.content-character-counter']", $wrapper)->length)->toBe(1)
+        ->and($html)->toContain('richEditorFormComponent(')
+        ->and($wrapper instanceof DOMElement ? $wrapper->getAttribute('x-data') : '')->toContain('observer?.disconnect()');
+
+    // Filament 4.12+ and 5 render this option. The old copied view always
+    // rendered false here, which switched file attachments off.
+    if (str_contains($html, 'canAttachFiles:')) {
+        expect($html)->toContain('canAttachFiles: true')
+            ->and($html)->not->toContain('canAttachFiles: false');
+    }
 });

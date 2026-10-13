@@ -1,1 +1,37 @@
-/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */.fi-fo-field .fi-input-charcounter{bottom:calc(var(--spacing,.25rem)*.5);padding-inline:calc(var(--spacing,.25rem)*2);text-align:end;font-size:var(--text-xs,.75rem);line-height:var(--tw-leading,var(--text-xs--line-height,calc(1/.75)));position:relative}.fi-fo-field .fi-input-charcounter.warning{color:var(--color-red-500,oklch(63.7% .237 25.331))}.fi-fo-rich-editor-wrapper .fi-input-charcounter{margin-top:calc(var(--spacing,.25rem)*2)}
+/*
+ * filament-character-counter: styles for the character counter.
+ *
+ * Plain CSS on purpose, so the package needs no build step. Colours come from
+ * Filament's own palette variables, which follow the panel theme and dark mode.
+ */
+
+.fi-input-charcounter {
+    position: relative;
+    bottom: 0.125rem;
+    padding-inline: 0.5rem;
+    text-align: end;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: var(--gray-500);
+}
+
+.dark .fi-input-charcounter {
+    color: var(--gray-400);
+}
+
+.fi-input-charcounter-rich-editor .fi-input-charcounter {
+    margin-top: 0.5rem;
+}
+
+.fi-input-charcounter-exceeded {
+    font-weight: 600;
+    color: var(--danger-600);
+}
+
+.dark .fi-input-charcounter-exceeded {
+    color: var(--danger-400);
+}
+
+.fi-input-charcounter-exceeded-message {
+    margin-inline-start: 0.25rem;
+}

@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * tests/TestCase.php
+ *
+ * Base test case: boots Filament, Livewire and this package in Testbench.
+ */
+
 namespace Schmeits\FilamentCharacterCounter\Tests;
 
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
@@ -12,23 +20,16 @@ use Filament\Notifications\NotificationsServiceProvider;
 use Filament\Support\SupportServiceProvider;
 use Filament\Tables\TablesServiceProvider;
 use Filament\Widgets\WidgetsServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Schmeits\FilamentCharacterCounter\FilamentCharacterCounterServiceProvider;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Schmeits\\FilamentCharacterCounter\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
-        );
-    }
-
-    protected function getPackageProviders($app)
+    /**
+     * @return array<int, class-string>
+     */
+    protected function getPackageProviders($app): array
     {
         // NOTE: the order here is functional, not cosmetic.
         // Filament\Support rebinds Livewire's DataStore to its own
@@ -53,15 +54,5 @@ class TestCase extends Orchestra
             LivewireServiceProvider::class,
             FilamentCharacterCounterServiceProvider::class,
         ];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('database.default', 'testing');
-
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_filament-character-counter_table.php.stub';
-        $migration->up();
-        */
     }
 }

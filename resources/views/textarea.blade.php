@@ -1,3 +1,10 @@
+{{--
+    resources/views/textarea.blade.php
+
+    Filament's textarea with the character counter. The count follows the
+    Livewire state and every input event, and counts per code point like
+    Laravel's max: rule.
+--}}
 @php
     use Filament\Support\Facades\FilamentView;
 
@@ -11,6 +18,18 @@
     $statePath = $getStatePath();
 
     $initialHeight = (($rows ?? 2) * 1.5) + 0.75;
+    $maxLength = $getMaxLength();
+
+    $showCharacterCounter = $shouldShowCharacterCounter();
+    $characterCount = $getCharacterCount();
+    $characterLimit = $getCharacterLimit();
+    $counterId = $getCharacterCounterId();
+
+    $accessibilityAttributes = method_exists($field, 'getAccessibilityAttributes') ? $field->getAccessibilityAttributes() : [];
+
+    if ($showCharacterCounter) {
+        $accessibilityAttributes['aria-describedby'] = trim(($accessibilityAttributes['aria-describedby'] ?? '') . ' ' . $counterId);
+    }
 @endphp
 
 <x-dynamic-component
@@ -18,8 +37,15 @@
     :field="$field"
     :has-inline-label="$hasInlineLabel"
     class="fi-fo-textarea-wrp"
-    x-data="{characterLimit: {{ $getCharacterLimit() }}, characterCount: 0 }"
-    x-init="characterCount={{ mb_strlen($getState() ? $getState() : '') }}"
+    x-data="{
+        characterLimit: {{ $characterLimit }},
+        characterCount: {{ $characterCount }},
+        countCharacters(value) {
+            return [...String(value ?? '')].length
+        },
+    }"
+    x-effect="characterCount = countCharacters($wire.$get('{{ $statePath }}'))"
+    x-on:input="characterCount = countCharacters($event.target.value)"
 >
     <x-filament::input.wrapper
         :disabled="$isDisabled"
@@ -32,9 +58,8 @@
                 ])
         "
     >
-        <div wire:ignore.self style="height: '{{ $initialHeight . 'rem' }}'">
+        <div wire:ignore.self style="height: {{ $initialHeight }}rem">
             <textarea
-                @keyup="characterCount = $event.target.value.length"
                 @if (FilamentView::hasSpaMode())
                     {{-- format-ignore-start --}}x-load="visible || event (x-modal-opened)"{{-- format-ignore-end --}}
                 @else
@@ -46,10 +71,10 @@
                             shouldAutosize: @js($shouldAutosize),
                             state: $wire.$entangle('{{ $statePath }}'),
                         })"
-                @if ($getMaxLength())
+                @if ($maxLength)
                     x-init="$watch('state', value => {
-                        if (value && value.length > {{ $getMaxLength() }}) {
-                            state = value.substring(0, {{ $getMaxLength() }});
+                        if (value && [...value].length > {{ (int) $maxLength }}) {
+                            state = [...value].slice(0, {{ (int) $maxLength }}).join('')
                         }
                     })"
                 @endif
@@ -67,6 +92,7 @@
                 {{
                     $getExtraInputAttributeBag()
                         ->merge([
+                            ...$accessibilityAttributes,
                             'autocomplete' => $getAutocomplete(),
                             'autofocus' => $isAutofocused(),
                             'cols' => $getCols(),
@@ -83,11 +109,11 @@
                 }}
             ></textarea>
         </div>
-        @if ($isShownInsideControl() && $getShowCharacterCounter())
+        @if ($showCharacterCounter && $isShownInsideControl())
             @include('filament-character-counter::partials.character-count-container')
         @endif
     </x-filament::input.wrapper>
-    @if (!$isShownInsideControl() && $getShowCharacterCounter())
+    @if ($showCharacterCounter && (! $isShownInsideControl()))
         @include('filament-character-counter::partials.character-count-container')
     @endif
 

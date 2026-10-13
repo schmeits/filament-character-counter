@@ -1,10 +1,18 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
-    level: 9
+    level: max
     paths:
         - src
         - config
     tmpDir: build/phpstan
-
+    ignoreErrors:
+        # Larastan only knows the views of the application, not the
+        # filament-character-counter:: namespace this package registers at
+        # boot. The render tests prove every one of these views exists.
+        -
+            identifier: property.defaultValue
+            path: src/Forms/Components/*.php
+            message: '#::\$view \(view-string\) does not accept default value of type string#'
+        -
+            identifier: argument.type
+            path: src/Forms/Components/RichEditor.php
+            message: '#\$view of function view expects view-string\|null, string given#'

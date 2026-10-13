@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * tests/Fixtures/AllFieldsLivewire.php
+ *
+ * Livewire form that renders every field of this package in the
+ * configurations the render tests check.
+ */
+
 namespace Schmeits\FilamentCharacterCounter\Tests\Fixtures;
 
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -10,13 +19,6 @@ use Schmeits\FilamentCharacterCounter\Forms\Components\RichEditor;
 use Schmeits\FilamentCharacterCounter\Forms\Components\Textarea;
 use Schmeits\FilamentCharacterCounter\Forms\Components\TextInput;
 
-/**
- * Fixture that renders all three of the package's fields at once.
- *
- * WHY: this package's blade views are copies of the Filament views with the
- * counter added. As soon as Filament renames a view helper, our views no longer
- * compile. Only by actually rendering them does that come to light.
- */
 class AllFieldsLivewire extends Component implements HasForms
 {
     use InteractsWithForms;
@@ -28,7 +30,7 @@ class AllFieldsLivewire extends Component implements HasForms
     {
         return $form
             ->statePath('data')
-            ->schema([
+            ->components([
                 TextInput::make('title')
                     ->characterLimit(100),
 
@@ -36,11 +38,32 @@ class AllFieldsLivewire extends Component implements HasForms
                     ->maxLength(60)
                     ->showInsideControl(),
 
+                TextInput::make('free_text'),
+
+                TextInput::make('too_long')
+                    ->characterLimit(5),
+
+                TextInput::make('closure_limit')
+                    ->characterLimit(fn (): ?int => null),
+
+                TextInput::make('disabled_field')
+                    ->characterLimit(20)
+                    ->disabled(),
+
                 Textarea::make('description')
-                    ->characterLimit(500),
+                    ->characterLimit(500)
+                    ->rows(3),
+
+                Textarea::make('notes')
+                    ->characterLimit(50)
+                    ->showInsideControl(),
 
                 RichEditor::make('content')
-                    ->characterLimit(1000),
+                    ->characterLimit(1000)
+                    ->fileAttachments(true),
+
+                RichEditor::make('plain_content')
+                    ->showCharacterCounter(false),
 
                 TextInput::make('hidden_counter')
                     ->characterLimit(100)
@@ -52,6 +75,7 @@ class AllFieldsLivewire extends Component implements HasForms
     {
         $this->form->fill([
             'title' => '1234567890',
+            'too_long' => 'héllo😀!',
         ]);
     }
 

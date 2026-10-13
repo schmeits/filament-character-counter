@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * config/character-counter.php
+ *
+ * Package configuration of filament-character-counter.
+ */
+
 return [
 
     /*
